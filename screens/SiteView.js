@@ -1,8 +1,23 @@
 import React , {useState} from 'react';
-import { StyleSheet, Text, View, TextInput, Button,
-      FlatList} from 'react-native';
-      import {styles} from './../styles/Styles'
-const SiteView = ( props)=>{
+import {useSelector } from 'react-redux';
+import {  Text, View, TextInput, Button,
+      } from 'react-native';
+import {styles} from './../styles/Styles'
+
+
+const SiteView = ( {route, navigation })=>{
+     let activeSite;
+      const {siteList} = useSelector( state=>{
+            state.site.siteList
+      })
+      if(route.params){
+            const { siteId } = route.params;
+            activeSite=siteList.find(s=>s.SiteID === siteId)
+      }
+      
+      
+      
+      
       const [goal, setGoal] = useState();
       const [goalList, setGoalList] = useState([]);
 
@@ -19,7 +34,7 @@ const SiteView = ( props)=>{
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                   <TextInput 
                         onChangeText = {handleChangeText}
-                        value={goal}
+                        value={activeSite.Name}
                         placeholder='you really suck'
                         style={{
                               width:200,
@@ -31,20 +46,7 @@ const SiteView = ( props)=>{
                   <Button title="add to list"
                         onPress= {handleAddGoal}/>
             </View>
-            <View>
-                        <FlatList
-                              data = {goalList}
-                              keyExtractor={item => item.id}
-                              renderItem={ ( {item} ) =>
-                                   
-                                          <Text>{item.value} </Text> 
-                                    
-                              }
-                        
-                        />
-
-                      
-            </View>
+            
         </View>
    
   );
