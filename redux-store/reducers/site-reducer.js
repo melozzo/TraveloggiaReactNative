@@ -1,12 +1,23 @@
-
+import * as SiteActions from './../actions/site-actions';
+import { ActionSheetIOS } from 'react-native';
 const initialState = {
       siteList:[],
-      activeSite:{}
+      activeSite:null
 }
 
 const siteReducer = ( state = initialState, action )=>{
 
-      return state;
+      switch(action.type){
+            case SiteActions.SET_SITES:
+                  return {
+                        siteList:action.siteList,
+                        activeSite:action.siteList[0]
+                  }
+            default: 
+                  return state;
+            
+      }
+      
 }
 
 export default siteReducer;

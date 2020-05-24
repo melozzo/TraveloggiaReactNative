@@ -3,19 +3,24 @@ import {useSelector, useDispatch } from 'react-redux'
 import {  Text, View, FlatList, Button} from 'react-native';
 import {styles} from './../styles/Styles'
 import * as mapActions  from './../redux-store/actions/map-actions'
+import ScreenHeader from './../components/ScreenHeader';
+
 
 const MapList = ( {navigation})=>{
-      const userMaps = useSelector( state =>state.map.mapList)
-      const memberId=46996;
+      
+      let memberId=46996;
       const dispatch = useDispatch();
-     
       useEffect(()=>{
             dispatch(mapActions.fetchMaps(memberId))
       },[dispatch, memberId])
-   
+      const userMaps = useSelector( state =>state.map.mapList)
     
       return (
             <View style={styles.screen}>
+                  <ScreenHeader>
+                       <Text></Text>
+                      
+                 </ScreenHeader>
                   <FlatList 
                         data= {userMaps}
                         keyExtractor={item => item.MapID}
