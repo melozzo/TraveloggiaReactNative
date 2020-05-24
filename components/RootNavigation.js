@@ -6,29 +6,16 @@ import JournalView from './../screens/JournalView';
 import MapList from './../screens/MapList'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, View, Text } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView,  DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import SiteList from './../screens/SiteList'
 
-//const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 const SiteListDrawer = createDrawerNavigator();
 const MapStack = createStackNavigator();
-
-function CustomDrawerContent(props) {
-      return (
-        <DrawerContentScrollView {...props}>
-          <DrawerItemList {...props} />
-          <DrawerItem
-            label="Close drawer"
-            onPress={() => props.navigation.closeDrawer()}
-          />
-          <DrawerItem
-            label="Toggle drawer"
-            onPress={() => props.navigation.toggleDrawer()}
-          />
-        </DrawerContentScrollView>
-      );
-    }
+const TabStack = createStackNavigator();
+const AlbumStack = createStackNavigator();
 
 
 
@@ -64,56 +51,77 @@ const MapStackComponent = ({ navigation }) =>{
 }
 
 
+const AlbumStackComponent = ({ navigation }) =>{
+      return (
+            <AlbumStack.Navigator initialRouteName="Album">
+                 <AlbumStack.Screen
+                        name="Album"
+                        component={AlbumScreen}
+                        options={({ route }) => ({ 
+                              title: 'Album Screen',
+                              headerStyle: {
+                                    backgroundColor: '#f4511e',
+                              },
+                              headerTintColor: '#114477',
+                              headerTitleStyle: {
+                                    fontWeight: 'bold',
+                              },
+                              headerLeft: () => (
+                                    <Button
+                                    onPress={() => {alert('This is a button!');
+                                    navigation.toggleDrawer();
+                                          }}
+                                    title="Info"
+                                    color="#113388"
+                                    />
+                              ),
 
-const Drawer = ()=>{
-return (<SiteListDrawer.Navigator 
-//drawerContent={(props) => {return (<CustomDrawerContent {...props}/>)}}>
-            //drawerContent={(props)=>{return(<View><Text>I am a drawer</Text></View>)}}>
-                              initialRouteName="Map">
-                         <SiteListDrawer.Screen
-                              name="SiteList"
-                              component={SiteList}
-                        /> 
-                          <SiteListDrawer.Screen
-                              name="Map"
-                              component={MapStackComponent}
-                        />
-                  </SiteListDrawer.Navigator>
-            )
+                        })}
+                 />
+     </AlbumStack.Navigator>
+     );
 }
 
-// const TabNavigatorComponent = ( )=>{
-//       return (
-//             <Tab.Navigator  initialRouteName="Map">
-//                   <Tab.Screen name="MapList" component={MapList} />
-//                   <Tab.Screen name="Map"
-//                   component={MapScreen}
-//                   screenOptions={{
-//                         title: 'Map',
-//                         headerStyle: {
-//                           backgroundColor: '#114477',
-//                           height:70
-//                         },
-//                         headerTintColor: 'black',
-//                         headerTitleStyle: {
-//                           fontWeight: 'bold',
-//                         },
-//                         headerRight: () => (
-//                               <Button
-//                                     title="Save Location"
-//                                     onPress={() => alert('Save Your Location')}
-//                                     color="#fff"
-//                               />
-//                             ),
-//                       }} />
-//             <Tab.Screen name="Album" component={AlbumScreen} />
-//             <Tab.Screen name="Site" component={SiteView} />
-//             <Tab.Screen name="Journal" component={JournalView} />
-//       </Tab.Navigator>
+    
+    function CustomDrawerContent(props) {
+      return (
+        <DrawerContentScrollView {...props}>
+          
+          <DrawerItem label="Help" onPress={() => alert('Link to help')} />
+          <DrawerItem label="Help" onPress={() => alert('Link to help')} />
+        </DrawerContentScrollView>
+      );
+    }
 
-//       )
+const Drawer = ()=>{
+      return (<SiteListDrawer.Navigator 
+            drawerContent={props => <CustomDrawerContent {...props} />}
+                        //drawerContent={(props)=>{return(<View><Text>I am a drawer</Text></View>)}}>
+                                          initialRouteName="Tabs">
+                                    
+                                      <SiteListDrawer.Screen
+                                          name="Tabs"
+                                          component={TabNavigatorComponent}
+                                    />
+                              </SiteListDrawer.Navigator>
+                        )
+}
 
-// }
+const TabNavigatorComponent = ( )=>{
+      return (
+            <Tab.Navigator  initialRouteName="Map">
+                  <Tab.Screen name="MapList" component={MapList} />
+                  <Tab.Screen name="Map"
+                   component={MapStackComponent}
+                      />
+            <Tab.Screen name="Album" component={AlbumStackComponent} />
+            <Tab.Screen name="Site" component={SiteView} />
+            <Tab.Screen name="Journal" component={JournalView} />
+      </Tab.Navigator>
+
+      )
+
+}
 
 
 const RootNavigation = ( props )=>{
