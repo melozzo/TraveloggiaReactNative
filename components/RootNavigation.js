@@ -16,7 +16,7 @@ const SiteListDrawer = createDrawerNavigator();
 const MapStack = createStackNavigator();
 const TabStack = createStackNavigator();
 const AlbumStack = createStackNavigator();
-
+const SiteStack = createStackNavigator();
 
 
 const MapStackComponent = ({ navigation }) =>{
@@ -82,27 +82,72 @@ const AlbumStackComponent = ({ navigation }) =>{
      );
 }
 
-    
-    function CustomDrawerContent(props) {
+const SiteStackComponent = ({ navigation }) =>{
       return (
-        <DrawerContentScrollView {...props}>
+            <SiteStack.Navigator initialRouteName="Site">
+                 <SiteStack.Screen
+                        name="Site"
+                        component={SiteList}
+                        options={({ route }) => ({ 
+                              title: 'Album Screen',
+                              headerStyle: {
+                                    backgroundColor: '#f4511e',
+                              },
+                              headerTintColor: '#114477',
+                              headerTitleStyle: {
+                                    fontWeight: 'bold',
+                              },
+                              headerLeft: () => (
+                                    <Button
+                                    onPress={() => {alert('This is a button!');
+                                    navigation.toggleDrawer();
+                                          }}
+                                    title="Info"
+                                    color="#113388"
+                                    />
+                              ),
+
+                        })}
+                 />
+     </SiteStack.Navigator>
+     );
+}
+
+    
+//     function CustomDrawerContent(props) {
+//       return (
+//         <DrawerContentScrollView {...props}>
           
-          <DrawerItem label="Help" onPress={() => alert('Link to help')} />
-          <DrawerItem label="Help" onPress={() => alert('Link to help')} />
-        </DrawerContentScrollView>
-      );
-    }
+//           <DrawerItem label="Help" onPress={() => alert('Link to help')} />
+//           <DrawerItem label="Help" onPress={() => alert('Link to help')} />
+//         </DrawerContentScrollView>
+//       );
+//     }
+
+const CustomDrawerContent = (props) =>{
+      const siteList = ["lyon","avingnon","brussels"]
+      return (
+                        <DrawerContentScrollView {...props}>
+                              {
+                                    siteList.map(site=>{
+                                             return   <DrawerItem label={site} onPress={() => alert('Link to help')} />
+                                    })
+                              }
+                             
+                        </DrawerContentScrollView>
+                  );
+}
+
 
 const Drawer = ()=>{
       return (<SiteListDrawer.Navigator 
-            drawerContent={props => <CustomDrawerContent {...props} />}
-                        //drawerContent={(props)=>{return(<View><Text>I am a drawer</Text></View>)}}>
-                                          initialRouteName="Tabs">
-                                    
+                        drawerContent={props => <CustomDrawerContent {...props} />}
+                        initialRouteName="Tabs">
                                       <SiteListDrawer.Screen
                                           name="Tabs"
                                           component={TabNavigatorComponent}
                                     />
+                                   
                               </SiteListDrawer.Navigator>
                         )
 }
