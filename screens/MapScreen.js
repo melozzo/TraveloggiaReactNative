@@ -10,15 +10,20 @@ import ScreenHeader from './../components/ScreenHeader';
 import * as Location from 'expo-location';
 import Constants from 'expo-constants';
 import ModalPrompt from './../components/ModalPrompt'
-
+import * as siteActions from './../redux-store/actions/site-actions';
 
 const MapScreen = ( {route, navigation})=>{
       let memberId=46996;
       const dispatch = useDispatch();
       const laCarte = useRef(null);
-      // useEffect(()=>{
-      //       dispatch(mapActions.fetchLastMap(memberId))
-      // },[dispatch, memberId])
+
+      useEffect(()=>{
+            dispatch(mapActions.fetchLastMap(memberId))
+      },[dispatch])
+      let mapId = 22364;
+      useEffect(()=>{
+            dispatch(siteActions.fetchSites(mapId))
+      },[]);
 
       const siteList = useSelector( state=>{state.site.siteList})
       const [currentLocation, setCurrentLocation] = useState({latitude:0,longitude:0});
@@ -45,12 +50,12 @@ const MapScreen = ( {route, navigation})=>{
             <View style={styles.screen}>
              
                 
-                  <ModalPrompt
+                  {/* <ModalPrompt
                         visible={savePromptVisible}
                         onClickYes={saveCurrentLocation}
                         onDismiss={()=>{setSavePromptVisible(false)}}
 
-                  />
+                  /> */}
                  
                  {/* <ScreenHeader>
                         <Button
