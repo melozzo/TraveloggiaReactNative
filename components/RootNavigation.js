@@ -118,15 +118,15 @@ const SiteStackComponent = ({ navigation }) =>{
 const CustomDrawerContent = (props) =>{
       const dispatch = useDispatch();
       let mapId = 22364;
-
-    
-
       const siteList = useSelector( state =>state.site.siteList);
       return (
                         <DrawerContentScrollView {...props}>
                               {
                                   siteList.length >0 &&   siteList.map(site=>{
-                                             return   <DrawerItem label={site.Name? site.Name:""} onPress={() => props.navigation.navigate("Site")} />
+                                             return   <DrawerItem label={site.Name? site.Name:""} 
+                                             onPress={   () => props.navigation.navigate("Site",{screen:"Site", params:{siteId:site.SiteID}}) }
+                                          
+                                           />
                                     })
                               }
                              

@@ -1,51 +1,39 @@
-import React , {useState} from 'react';
+import React , {useState, useEffect} from 'react';
 import {useSelector } from 'react-redux';
-import {  Text, View, TextInput, Button,
-      } from 'react-native';
+import {  View, Button} from 'react-native';
 import {styles} from '../styles/Styles'
-
+import { Text, Card, ListItem, Divider } from 'react-native-elements'
 
 const SiteScreen = ( {route, navigation })=>{
-     let activeSite;
-      // const {siteList} = useSelector( state=>{
-      //       state.site.siteList
-      // })
-      // if(route.params){
-      //       const { siteId } = route.params;
-      //       activeSite=siteList.find(s=>s.SiteID === siteId)
-      // }
-      
-      
-      
-      
-      const [goal, setGoal] = useState();
-      const [goalList, setGoalList] = useState([]);
+      const [activeSite, setActiveSite] = useState({})
 
-      const handleChangeText=(txt)=>{
-            setGoal(txt);
-      }
-      const handleAddGoal = ( )=>{
-            console.log(goal)
-            setGoalList(goalList=>[...goalList,{id:Math.random().toString() , value:goal}]);
-      } 
+      const siteList = useSelector( state=>state.site.siteList);
+      const [propList, setPropList] = useState([])
+
+      useEffect(() => {
+            let siteId = JSON.stringify(route.params.siteId)
+            let selected = siteList.find( s=>s.SiteID === parseInt(siteId));
+            setActiveSite(selected);
+            setPropList(Object.entries(selected))
+      }, [route.params?.siteId]);
+
+
 
   return (
-        <View style={styles.screen}>
-            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                  <TextInput 
-                        onChangeText = {handleChangeText}
-                        value={goal}
-                        placeholder='you really suck'
-                        style={{
-                              width:200,
-                              borderBottomColor:"black",
-                              borderBottomWidth:1
-                        }}
-                  
-                  />
-                  <Button title="add to list"
-                        onPress= {handleAddGoal}/>
-            </View>
+        <View>
+            <Card>
+                <Text h3 >{activeSite.Name}</Text>
+                  {
+                        propList.map( prop =>{
+                              return (
+                              <ListItem
+                                          title={prop[1]}
+                                          subtitle={prop[0]}
+                                    />
+                              )
+                        })
+                  }
+                </Card>
             
         </View>
    
