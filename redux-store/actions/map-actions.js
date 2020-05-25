@@ -38,10 +38,10 @@ export const fetchLastMap = (memberId)=>{
                   type:SET_MAP,
                   map: data
             })
-            dispatch({
-                  type:SET_SITES,
-                  siteList: data.Sites
-            })
+            // dispatch({
+            //       type:SET_SITES,
+            //       siteList: data.Sites
+            // })
       }
 }
 

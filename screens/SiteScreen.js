@@ -2,18 +2,18 @@ import React , {useState} from 'react';
 import {useSelector } from 'react-redux';
 import {  Text, View, TextInput, Button,
       } from 'react-native';
-import {styles} from './../styles/Styles'
+import {styles} from '../styles/Styles'
 
 
-const SiteView = ( {route, navigation })=>{
+const SiteScreen = ( {route, navigation })=>{
      let activeSite;
-      const {siteList} = useSelector( state=>{
-            state.site.siteList
-      })
-      if(route.params){
-            const { siteId } = route.params;
-            activeSite=siteList.find(s=>s.SiteID === siteId)
-      }
+      // const {siteList} = useSelector( state=>{
+      //       state.site.siteList
+      // })
+      // if(route.params){
+      //       const { siteId } = route.params;
+      //       activeSite=siteList.find(s=>s.SiteID === siteId)
+      // }
       
       
       
@@ -34,7 +34,7 @@ const SiteView = ( {route, navigation })=>{
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                   <TextInput 
                         onChangeText = {handleChangeText}
-                        value={activeSite.Name}
+                        value={goal}
                         placeholder='you really suck'
                         style={{
                               width:200,
@@ -52,4 +52,4 @@ const SiteView = ( {route, navigation })=>{
   );
 }
 
-export default SiteView;
+export default SiteScreen;

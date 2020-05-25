@@ -10,9 +10,11 @@ const MapList = ( {navigation})=>{
       
       let memberId=46996;
       const dispatch = useDispatch();
+      
       useEffect(()=>{
             dispatch(mapActions.fetchMaps(memberId))
       },[dispatch, memberId])
+
       const userMaps = useSelector( state =>state.map.mapList)
     
       return (

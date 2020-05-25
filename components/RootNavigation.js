@@ -1,7 +1,8 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import AlbumScreen from './../screens/AlbumScreen';
 import MapScreen from './../screens/MapScreen';
-import SiteView from './../screens/SiteView';
+import SiteScreen from '../screens/SiteScreen';
+import SiteList from './../screens/SiteList';
 import JournalView from './../screens/JournalView';
 import MapList from './../screens/MapList'
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,8 +10,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, View, Text } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView,  DrawerItemList, DrawerItem } from '@react-navigation/drawer';
-import SiteList from './../screens/SiteList'
-
+import * as siteActions from './../redux-store/actions/site-actions';
+import {useSelector , useDispatch} from 'react-redux';
 const Tab = createBottomTabNavigator();
 const SiteListDrawer = createDrawerNavigator();
 const MapStack = createStackNavigator();
@@ -87,9 +88,9 @@ const SiteStackComponent = ({ navigation }) =>{
             <SiteStack.Navigator initialRouteName="Site">
                  <SiteStack.Screen
                         name="Site"
-                        component={SiteList}
+                        component={SiteScreen}
                         options={({ route }) => ({ 
-                              title: 'Album Screen',
+                              title: 'Site Screen',
                               headerStyle: {
                                     backgroundColor: '#f4511e',
                               },
@@ -113,24 +114,21 @@ const SiteStackComponent = ({ navigation }) =>{
      );
 }
 
-    
-//     function CustomDrawerContent(props) {
-//       return (
-//         <DrawerContentScrollView {...props}>
-          
-//           <DrawerItem label="Help" onPress={() => alert('Link to help')} />
-//           <DrawerItem label="Help" onPress={() => alert('Link to help')} />
-//         </DrawerContentScrollView>
-//       );
-//     }
 
 const CustomDrawerContent = (props) =>{
-      const siteList = ["lyon","avingnon","brussels"]
+      const dispatch = useDispatch();
+      let mapId = 22364;
+
+      useEffect(()=>{
+            dispatch(siteActions.fetchSites(mapId))
+      },[]);
+
+      const siteList = useSelector( state =>state.site.siteList);
       return (
                         <DrawerContentScrollView {...props}>
                               {
                                     siteList.map(site=>{
-                                             return   <DrawerItem label={site} onPress={() => alert('Link to help')} />
+                                             return   <DrawerItem label={site.Name} onPress={() => props.navigation.navigate("Site")} />
                                     })
                               }
                              
@@ -160,7 +158,7 @@ const TabNavigatorComponent = ( )=>{
                    component={MapStackComponent}
                       />
             <Tab.Screen name="Album" component={AlbumStackComponent} />
-            <Tab.Screen name="Site" component={SiteView} />
+            <Tab.Screen name="Site" component={SiteStackComponent} />
             <Tab.Screen name="Journal" component={JournalView} />
       </Tab.Navigator>
 
