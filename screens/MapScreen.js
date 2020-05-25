@@ -16,23 +16,34 @@ const MapScreen = ( {route, navigation})=>{
       let memberId=46996;
       const dispatch = useDispatch();
       const laCarte = useRef(null);
+      const [mapId, setMapId] = useState(22364);
+      let siteList = useSelector( state=> state.site.siteList)
 
       useEffect(()=>{
-            dispatch(mapActions.fetchLastMap(memberId))
-      },[dispatch])
-      let mapId = 22364;
+            if(route.params && route.params.mapId){
+                  let id = JSON.stringify(route.params.mapId);
+                  setMapId( parseInt(id) );
+            }
+      },[route.params?.mapId])
+
+      // if(route.params ){
+      //       const { memberId } = route.params;
+      // }
+
+      // useEffect(()=>{
+      //       dispatch(mapActions.fetchLastMap(memberId))
+      // },[dispatch])
+
       useEffect(()=>{
             dispatch(siteActions.fetchSites(mapId))
-      },[]);
+      },[mapId]);
 
-      const siteList = useSelector( state=>{state.site.siteList})
       const [currentLocation, setCurrentLocation] = useState({latitude:0,longitude:0});
-      const [savePromptVisible, setSavePromptVisible]= useState(true)
+      const [savePromptVisible, setSavePromptVisible]= useState(false)
 
 
 
       const { width, height } = Dimensions.get('window');
-
       const ASPECT_RATIO = width / height;
       const LATITUDE = 33.04652;
       const LONGITUDE = -117.29960;
@@ -40,53 +51,38 @@ const MapScreen = ( {route, navigation})=>{
       const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
       const SPACE = 0.01;
 
-      if(route.params ){
-            const { memberId } = route.params;
-      }
+     
 
     
  
       return (
             <View style={styles.screen}>
-             
-                
-                  {/* <ModalPrompt
+                   <ModalPrompt
                         visible={savePromptVisible}
                         onClickYes={saveCurrentLocation}
                         onDismiss={()=>{setSavePromptVisible(false)}}
-
-                  /> */}
+                  /> 
                  
-                 {/* <ScreenHeader>
-                        <Button
-                              style={styles.topRightButton}
-                              title="Current Location"
-                              onPress={getCurrentLocation}
-                        />
-                 </ScreenHeader> */}
-               
+
                   <MapView ref={laCarte}
                         provider={PROVIDER_GOOGLE}
                       //  showsUserLocation={true}
                         style={styles.map}
-                        region={{
-                              latitude: currentLocation.latitude,
-                              longitude: currentLocation.longitude,
-                              latitudeDelta: LATITUDE_DELTA,
-                              longitudeDelta: LONGITUDE_DELTA,
-                        }}
-
-
-
+                        // region={{
+                        //       latitude: currentLocation.latitude,
+                        //       longitude: currentLocation.longitude,
+                        //       latitudeDelta: LATITUDE_DELTA,
+                        //       longitudeDelta: LONGITUDE_DELTA,
+                        // }}
                   >
-                           {/* {siteList.map(marker => (
+                          {siteList.map(marker => (
                               <Marker
                                     title={marker.Name}
                                    
                                     key={marker.SiteID}
                                     coordinate={{latitude:marker.Latitude, longitude:marker.Longitude}}
                               />
-                              ))} */}
+                              ))} 
 
                   </MapView>
             </View>

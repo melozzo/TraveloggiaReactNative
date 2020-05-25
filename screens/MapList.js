@@ -32,15 +32,22 @@ const MapList = ( {navigation})=>{
                                           <Text>{item.MapName}</Text>
                                           <Button 
                                                 title={'select'}
-                                          onPress={() => navigation.navigate('Map',{
-                                                mapId:item.MapID
-                                          })}/>
+                                                onPress={() =>selectMap(item)}/>
                                     </View>
                                     )
                               }
                   />
             </View>
       )
+
+
+      function selectMap(map){
+            navigation.navigate('Map',{screen:"Map", params:{mapId:map.MapID}});
+            // dispatch({
+            //       type:SET_MAP,
+            //       map: map
+            // })
+      }
 
 }
 

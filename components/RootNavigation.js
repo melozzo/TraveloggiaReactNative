@@ -100,7 +100,7 @@ const SiteStackComponent = ({ navigation }) =>{
                               },
                               headerLeft: () => (
                                     <Button
-                                    onPress={() => {alert('This is a button!');
+                                    onPress={() => {
                                     navigation.toggleDrawer();
                                           }}
                                     title="Info"
