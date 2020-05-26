@@ -42,9 +42,9 @@ const modalStyles = StyleSheet.create({
                               <View style={modalStyles.modalContainer}>
                                     <View style={{paddingTop:30, paddingBottm:30, paddingLeft:10, paddingRight:10}}>
 
-                                    <Button title="Yes Save"
-                                          
+                                    <Button title="Save Me"
                                           onPress={onClickYes}/>
+
                                           <Button title="Dismiss"
                                           onPress={onDismiss}/>
                                     </View>

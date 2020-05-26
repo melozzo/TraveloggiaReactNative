@@ -13,59 +13,54 @@ import ModalPrompt from './../components/ModalPrompt'
 import * as siteActions from './../redux-store/actions/site-actions';
 
 const MapScreen = ( {route, navigation})=>{
-      let memberId=46996;
+      let memberId=46996;// email white@album pwd snow
       const dispatch = useDispatch();
       const laCarte = useRef(null);
       const [mapId, setMapId] = useState(22364);
-      let siteList = useSelector( state=> state.site.siteList)
+
+      let siteList = useSelector( state=> state.site.siteList);
+
+
+
+      const [currentLocation, setCurrentLocation] = useState({latitude:0,longitude:0});
+      const [savePromptVisible, setSavePromptVisible]= useState(true);
+      const [activeRegion, setActiveRegion] = useState();
+      const [coordList, setCoordList] = useState([]);
 
       useEffect(()=>{
             if(route.params && route.params.mapId){
                   let id = JSON.stringify(route.params.mapId);
                   setMapId( parseInt(id) );
             }
-      },[route.params?.mapId])
-
-      // if(route.params ){
-      //       const { memberId } = route.params;
-      // }
-
-      // useEffect(()=>{
-      //       dispatch(mapActions.fetchLastMap(memberId))
-      // },[dispatch])
+            setSavePromptVisible(true);
+      },[route.params?.mapId]);
 
       useEffect(()=>{
             dispatch(siteActions.fetchSites(mapId))
       },[mapId]);
 
-      const [currentLocation, setCurrentLocation] = useState({latitude:0,longitude:0});
-      const [savePromptVisible, setSavePromptVisible]= useState(false)
+      useEffect(()=>{
+            let coords = [];
+            for( let i=0; i< siteList.length; i++){
+                  let marker = siteList[i];
+                  coords.push({latitude:marker.Latitude, longitude:marker.Longitude});
+                  setCoordList(coords);
+                
+            }
+      },[siteList])
 
-
-
-      const { width, height } = Dimensions.get('window');
-      const ASPECT_RATIO = width / height;
-      const LATITUDE = 33.04652;
-      const LONGITUDE = -117.29960;
-      const LATITUDE_DELTA = 0.0922;
-      const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-      const SPACE = 0.01;
-
-     
-
-    
- 
       return (
             <View style={styles.screen}>
                    <ModalPrompt
                         visible={savePromptVisible}
-                        onClickYes={saveCurrentLocation}
+                        onClickYes={zoomToExtent}
                         onDismiss={()=>{setSavePromptVisible(false)}}
                   /> 
                  
 
                   <MapView ref={laCarte}
                         provider={PROVIDER_GOOGLE}
+                       // onLayout={ zoomToExtent}
                       //  showsUserLocation={true}
                         style={styles.map}
                         // region={{
@@ -75,11 +70,10 @@ const MapScreen = ( {route, navigation})=>{
                         //       longitudeDelta: LONGITUDE_DELTA,
                         // }}
                   >
-                          {siteList.map(marker => (
+                          {siteList.map((marker,i )=> (
                               <Marker
                                     title={marker.Name}
-                                   
-                                    key={marker.SiteID}
+                                    key={i}
                                     coordinate={{latitude:marker.Latitude, longitude:marker.Longitude}}
                               />
                               ))} 
@@ -103,8 +97,10 @@ const MapScreen = ( {route, navigation})=>{
             });
       }
 
-      function saveCurrentLocation(){
-
+      function zoomToExtent(){
+           
+            laCarte.current.fitToCoordinates(coordList, {edgePadding: { top:120, right: 20, bottom: 140, left: 20 },
+                  animated: false});
       }
 
       function getCurrentLocation(){
@@ -118,6 +114,21 @@ const MapScreen = ( {route, navigation})=>{
             setSavePromptVisible(true);
       }
 
+      function saveCurrentLocation(){
+            alert("location saved")
+      }
+
+      function calculateRegion(){
+            // const { width, height } = Dimensions.get('window');
+            // const ASPECT_RATIO = width / height;
+            // const LATITUDE = 33.04652;
+            // const LONGITUDE = -117.29960;
+            // const LATITUDE_DELTA = 0.0922;
+            // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+            // const SPACE = 0.01;
+      }
+      
+
       function fullExtent(){
       
                   laCarte.current.fitToCoordinates([{latitude:45.4046983,longitude:12.2469058 },{latitude:45.4066028,longitude:11.8210339}], {
@@ -129,3 +140,14 @@ const MapScreen = ( {route, navigation})=>{
 }
 
 export default MapScreen;
+
+
+
+      
+
+      // useEffect(()=>{
+            // if(route.params && route.params.memberId){
+      //       let  memberId  = route.params.memberId;
+//}
+//       dispatch(mapActions.fetchLastMap(memberId))
+// },[dispatch])
