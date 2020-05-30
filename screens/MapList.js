@@ -3,7 +3,7 @@ import {useSelector, useDispatch } from 'react-redux'
 import {  Text, View, FlatList, Button} from 'react-native';
 import {styles} from './../styles/Styles'
 import * as mapActions  from './../redux-store/actions/map-actions'
-import ScreenHeader from './../components/ScreenHeader';
+import * as siteActions from './../redux-store/actions/site-actions';
 
 
 const MapList = ( {navigation})=>{
@@ -16,37 +16,29 @@ const MapList = ( {navigation})=>{
       },[dispatch, memberId])
 
       const userMaps = useSelector( state =>state.map.mapList)
+
     
       return (
             <View style={styles.screen}>
-                  <ScreenHeader>
-                       <Text></Text>
-                      
-                 </ScreenHeader>
-                  <FlatList 
-                        data= {userMaps}
-                        keyExtractor={item => item.MapID}
-                              renderItem={ 
-                                    ( {item} ) =>(
-                                    <View>
-                                          <Text>{item.MapName}</Text>
-                                          <Button 
-                                                title={'select'}
-                                                onPress={() =>selectMap(item)}/>
-                                    </View>
-                                    )
-                              }
-                  />
+                { userMaps.length > 0 &&
+                              <FlatList 
+                                    data= {userMaps}
+                                    keyExtractor={item=> item._id}
+                                    renderItem={({ item }) => <View>
+                                    <Text>{item.MapName}</Text>
+                                    <Button 
+                                          title={'select'}
+                                          onPress={() =>selectMap(item)}/>
+                              </View>}
+                              />
+                }  
             </View>
       )
 
 
       function selectMap(map){
+            dispatch(siteActions.fetchSites(map.MapID))
             navigation.navigate('Map',{screen:"Map", params:{mapId:map.MapID}});
-            // dispatch({
-            //       type:SET_MAP,
-            //       map: map
-            // })
       }
 
 }

@@ -5,15 +5,14 @@ import mapReducer from './redux-store/reducers/map-reducer';
 import {Provider } from 'react-redux'
 import siteReducer from './redux-store/reducers/site-reducer';
 import ReduxThunk from 'redux-thunk'
-import RootContainer from './components/RootContainer';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 function App() {
       const rootReducer = combineReducers({
             map: mapReducer,
             site: siteReducer,
       })
-      const store = createStore(rootReducer, applyMiddleware(ReduxThunk),
-      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+      const store = createStore(rootReducer, composeWithDevTools(), applyMiddleware(ReduxThunk));
 
       return (
             <Provider store = { store }>

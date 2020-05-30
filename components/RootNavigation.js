@@ -122,11 +122,14 @@ const CustomDrawerContent = (props) =>{
       return (
                         <DrawerContentScrollView {...props}>
                               {
-                                  siteList.length >0 &&   siteList.map(site=>{
-                                             return   <DrawerItem label={site.Name? site.Name:""} 
+                                   siteList.length >0 &&   siteList.map((site,i)=>{
+                                             return   (
+                                             <DrawerItem 
+                                             key={i}
+                                             label={site.Name? site.Name:""} 
                                              onPress={   () => props.navigation.navigate("Site",{screen:"Site", params:{siteId:site.SiteID}}) }
-                                          
                                            />
+                                           )
                                     })
                               }
                              

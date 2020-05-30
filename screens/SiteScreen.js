@@ -22,17 +22,21 @@ const SiteScreen = ( {route, navigation })=>{
   return (
         <View>
             <Card>
-                <Text h3 >{activeSite.Name}</Text>
-                  {
-                        propList.map( prop =>{
-                              return (
-                              <ListItem
-                                          title={prop[1]}
-                                          subtitle={prop[0]}
-                                    />
-                              )
-                        })
-                  }
+                  <View>
+                        <Text h3 >{activeSite.Name}</Text>
+                        {
+                              propList.map((prop,i) =>{
+                                    return (
+                                    <ListItem
+                                                key={i}
+                                                title={ prop[1] ? prop[1].toString() : "bunnies"}
+                                                subtitle={prop[0]}
+                                          />
+                                    )
+                              })
+                        }
+                  </View>
+                
                 </Card>
             
         </View>

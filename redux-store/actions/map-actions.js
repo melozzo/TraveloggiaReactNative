@@ -3,7 +3,7 @@ export const SET_MAPS = 'SET_MAPS';
 export const SET_MAP = 'SET_MAP';
 
 
-const baseURL= 'http://138.68.12.0:8080';      // 'http://localhost:7070'
+const baseURL= 'http://138.68.12.0:8080';      // 'http://localhost:7070';
 
 export const fetchMaps = (memberId)=>{ 
       return async dispatch =>{
@@ -33,7 +33,7 @@ export const fetchLastMap = (memberId)=>{
                   },
             })
             const data = await response.json();
-            console.log('returning map' ,data)
+           
             dispatch({
                   type:SET_MAP,
                   map: data
