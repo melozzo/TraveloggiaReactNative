@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef} from 'react';
 import {useSelector, useDispatch } from 'react-redux';
-import {  View, Button, Dimensions, Modal, StyleSheet} from 'react-native';
+import {  View, Dimensions, Modal, StyleSheet} from 'react-native';
 import {styles} from '../styles/Styles'
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import * as mapActions from './../redux-store/actions/map-actions';
@@ -11,6 +11,33 @@ import * as Location from 'expo-location';
 import Constants from 'expo-constants';
 import ModalPrompt from './../components/ModalPrompt'
 import * as siteActions from './../redux-store/actions/site-actions';
+import { ListItem, Header } from 'react-native-elements'
+import { Fontisto } from '@expo/vector-icons'; 
+import { Button } from 'react-native-elements';
+
+const LeftButtonComponent=(props)=>{
+      const {showList} = props;
+      return <Button
+     
+      icon={<Fontisto name="nav-icon-list-a" size={24} color="black" />}
+      title="  Sites"
+      onPress={() => {
+         showList();
+                  }}
+    />
+}
+
+const CurrentLocationComponent=(props)=>{
+      const {getLocation} = props;
+      return <Button
+     iconRight
+      icon={<Fontisto name="map-marker" size={24} color="black" />}
+      title="Locate  "
+      onPress={() => {
+         getLocation();
+                  }}
+    />
+}
 
 const MapScreen = ( {route, navigation})=>{
       let memberId=46996;// email white@album pwd snow
@@ -21,8 +48,15 @@ const MapScreen = ( {route, navigation})=>{
       let siteList = useSelector( state=> state.site.siteList);
       const [currentLocation, setCurrentLocation] = useState({latitude:0,longitude:0});
       const [savePromptVisible, setSavePromptVisible]= useState(false);
-      const [activeRegion, setActiveRegion] = useState();
+      const [defaultRegion, setDefaultRegion] = useState();
       const [coordList, setCoordList] = useState([]);
+
+      useEffect(()=>{
+            if(! route.params ){
+                  getCurrentLocation();
+            }
+            
+      },[route.params?.mapId]);
 
       useEffect(()=>{
             if(route.params && route.params.mapId){
@@ -32,20 +66,19 @@ const MapScreen = ( {route, navigation})=>{
             setSavePromptVisible(true);
       },[route.params?.mapId]);
 
-     useEffect(()=>{
-            if(coordList.length > 0)
-                  zoomToExtent();
-     },[coordList])
-
       useEffect(()=>{
             let coords = [];
             for( let i=0; i< siteList.length; i++){
                   let marker = siteList[i];
                   coords.push({latitude:marker.Latitude, longitude:marker.Longitude});
                   setCoordList(coords);
-                 
             }
-      },[siteList])
+      },[siteList]);
+
+      useEffect(()=>{
+            if(coordList.length > 0)
+                  zoomToExtent();
+     },[coordList])
 
       return (
             <View style={styles.screen}>
@@ -54,27 +87,29 @@ const MapScreen = ( {route, navigation})=>{
                         onClickYes={zoomToExtent}
                         onDismiss={()=>{getCurrentLocation}}
                   />  */}
-                 
+                    <Header
+                        leftComponent={<LeftButtonComponent  showList={toggleDrawer} />}
+                        placement="center"
+                        centerComponent={{ text: 'My Map', style: { color: '#fff' } }}
+                        rightComponent={ <CurrentLocationComponent getLocation={getCurrentLocation}/> }></Header>
 
                   <MapView style={{position:'absolute',top:'0',left:'0',right:'0',bottom:'20'}}
-                  
-                  ref={laCarte}
+                        ref={laCarte}
                         provider={PROVIDER_GOOGLE}
-                      
                         showsUserLocation={false}
                         style={styles.map}
-                      
+                        region={defaultRegion}
                   >
-                         {
+                        {
                             siteList.map((marker,i )=> {
                                 if(marker.Latitude && marker.Longitude ){
                                     return (
-                                                <Marker
-                                                      title={marker.Name}
-                                                      key={i}
-                                                      coordinate={{latitude:marker.Latitude, longitude:marker.Longitude}}
-                                                />
-                                                )
+                                          <Marker
+                                                title={marker.Name}
+                                                key={i}
+                                                coordinate={{latitude:marker.Latitude, longitude:marker.Longitude}}
+                                          />
+                                          )
                                     }
                               })
                         }  
@@ -83,46 +118,38 @@ const MapScreen = ( {route, navigation})=>{
             </View>
       )
 
-      function renderSites(){
-            if (siteList)
-            siteList.map(site => {
-                  let LatLng={
-                        latitude:site.Latitude,
-                        longitude:site.Longitude
-                  }
-            return (      <Marker
-                        coordinate={LatLng}
-                        title={site.Name}
-                  //  description={site.Description}
-                  /> )
-            });
-      }
-
-      function zoomToExtent(){
-
-
-         
-
-              laCarte.current.fitToCoordinates(coordList, {edgePadding: { top:120, right: 20, bottom: 140, left: 20 },
-            animated: false});
+      function toggleDrawer(){
+            navigation.toggleDrawer();
       }
 
       async function getCurrentLocation(){
-      //      let { status } = await Location.requestPermissionsAsync();
-      //       if (status !== 'granted') {
-      //             alert('Permission to access location was denied');
-      //       }
-         
-      //       let location = await Location.getCurrentPositionAsync({accuracy:5, timeout:5000});
-      //       setCurrentLocation( location.Latlng);
-      //       setActiveRegion(  {
-      //             latitude: location.Latitude,
-      //             longitude: location.Longitude,
-      //             latitudeDelta: LATITUDE_DELTA,
-      //             longitudeDelta: LONGITUDE_DELTA,
-      //       });
-            setSavePromptVisible(false);
+           const LONGITUDE_DELTA=.09;
+           const LATITUDE_DELTA=.04;
+                
+            let { status } = await Location.requestPermissionsAsync();
+                  if (status !== 'granted') {
+                        alert('Permission to access location was denied');
+                        return;
+                  }
+               
+                  let location = await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.Highest});
+     
+                  let region =  {
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA,
+                  };
+                  setDefaultRegion(region);
+                  setSavePromptVisible(false);
+            }
+
+      function zoomToExtent(){
+            laCarte.current.fitToCoordinates(coordList, {edgePadding: { top:120, right: 20, bottom: 140, left: 20 },
+            animated: false});
       }
+
+     
 
       function saveCurrentLocation(){
             alert("location saved")

@@ -24,6 +24,10 @@ const SiteScreen = ( {route, navigation })=>{
             <Card>
                   <View>
                         <Text h3 >{activeSite.Name}</Text>
+                        <Button
+                              title="Add To Calendar"
+                              onPress={() => navigation.navigate('Calendar')}
+                              />
                         {
                               propList.map((prop,i) =>{
                                     return (

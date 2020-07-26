@@ -14,4 +14,6 @@ BUT it doesnt work
 for good old fashioned chrome dev tools type
 cmd alt I ( the letter i ) :)
 
+when you want to install a new package use expo install - it will use yarn (: but that just tough
+
 */

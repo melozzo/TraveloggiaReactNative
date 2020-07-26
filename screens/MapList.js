@@ -4,7 +4,9 @@ import {  Text, View, FlatList, Button} from 'react-native';
 import {styles} from './../styles/Styles'
 import * as mapActions  from './../redux-store/actions/map-actions'
 import * as siteActions from './../redux-store/actions/site-actions';
-
+import { ListItem, Header } from 'react-native-elements'
+import Moment from 'moment';
+import { AntDesign } from '@expo/vector-icons'; 
 
 const MapList = ( {navigation})=>{
       
@@ -16,21 +18,39 @@ const MapList = ( {navigation})=>{
       },[dispatch, memberId])
 
       const userMaps = useSelector( state =>state.map.mapList)
+      
 
-    
+      const renderItem = ({ item }) => {
+            console.log(item.CreateDate)
+            return(
+            
+            <ListItem
+              title={item.MapName}
+              subtitle={Moment(item.CreateDate).format('MM/DD/yyyy')}
+              leftAvatar={{ source: { uri: item.avatar_url } }}
+              bottomDivider
+              chevron
+              onPress={() =>selectMap(item)}
+            />
+      )
+            }
+
+      const keyExtractor = (item, index) => index.toString()
       return (
             <View style={styles.screen}>
+                
+                  <Header
+                        placement="center"
+                        centerComponent={{ text: 'Map List', style: { color: '#fff' } }}
+                        rightComponent={  <AntDesign name="pluscircle" size={34} color="black" />}></Header>
+            
                 { userMaps.length > 0 &&
-                              <FlatList 
-                                    data= {userMaps}
-                                    keyExtractor={item=> item._id}
-                                    renderItem={({ item }) => <View>
-                                    <Text>{item.MapName}</Text>
-                                    <Button 
-                                          title={'select'}
-                                          onPress={() =>selectMap(item)}/>
-                              </View>}
-                              />
+                  <FlatList
+                        style={{width:'100%'}}
+                        keyExtractor={keyExtractor}
+                        data={userMaps}
+                        renderItem={renderItem}
+                />
                 }  
             </View>
       )
@@ -44,3 +64,17 @@ const MapList = ( {navigation})=>{
 }
 
 export default MapList;
+
+// <FlatList 
+//                         data= {userMaps}
+//                         keyExtractor={item=> item._id}
+//                         renderItem={({ item }) => 
+//                        <ListItem
+//                        leftIcon={{name:'home'}}
+//                               title={item.MapName}
+//                               subtitle='just kidding'
+//                               chevron
+//                               bottomDivider
+//                               onPress={() =>selectMap(item)}
+//                         ></ListItem>}
+//                   />

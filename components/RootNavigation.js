@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import AlbumScreen from './../screens/AlbumScreen';
 import MapScreen from './../screens/MapScreen';
 import SiteScreen from '../screens/SiteScreen';
+import CalendarScreen from './../screens/CalendarScreen';
 import SiteList from './../screens/SiteList';
 import JournalView from './../screens/JournalView';
 import MapList from './../screens/MapList'
@@ -103,10 +104,34 @@ const SiteStackComponent = ({ navigation }) =>{
                                     onPress={() => {
                                     navigation.toggleDrawer();
                                           }}
-                                    title="Info"
+                                    title="Site List"
                                     color="#113388"
                                     />
                               ),
+
+                        })}
+                 />
+                 <SiteStack.Screen
+                        name="Calendar"
+                        component={CalendarScreen}
+                        options={({ route }) => ({ 
+                              title: 'Calendar Screen',
+                              headerStyle: {
+                                    backgroundColor: '#f4511e',
+                              },
+                              headerTintColor: '#114477',
+                              headerTitleStyle: {
+                                    fontWeight: 'bold',
+                              },
+                              // headerLeft: () => (
+                              //       <Button
+                              //       onPress={() => {
+                              //       navigation.toggleDrawer();
+                              //             }}
+                              //       title="Site List"
+                              //       color="#113388"
+                              //       />
+                              // ),
 
                         })}
                  />
@@ -120,21 +145,22 @@ const CustomDrawerContent = (props) =>{
       let mapId = 22364;
       const siteList = useSelector( state =>state.site.siteList);
       return (
-                        <DrawerContentScrollView {...props}>
-                              {
-                                   siteList.length >0 &&   siteList.map((site,i)=>{
-                                             return   (
-                                             <DrawerItem 
-                                             key={i}
-                                             label={site.Name? site.Name:""} 
-                                             onPress={   () => props.navigation.navigate("Site",{screen:"Site", params:{siteId:site.SiteID}}) }
-                                           />
-                                           )
-                                    })
-                              }
-                             
-                        </DrawerContentScrollView>
-                  );
+                  <DrawerContentScrollView {...props}>
+                        {
+                              siteList.length >0 &&   siteList.map((site,i)=>{
+                                    return   (
+                                          <DrawerItem 
+                                                key={i}
+                                                label={site.Name? site.Name:""} 
+                                                onPress={   () => props.navigation.navigate("Site",{screen:"Site", params:{siteId:site.SiteID}}) }
+                                          />
+                                                
+                                        
+                                    )
+                              })
+                        }
+                  </DrawerContentScrollView>
+            );
 }
 
 
@@ -156,7 +182,7 @@ const TabNavigatorComponent = ( )=>{
             <Tab.Navigator  initialRouteName="Map">
                   <Tab.Screen name="MapList" component={MapList} />
                   <Tab.Screen name="Map"
-                   component={MapStackComponent}
+                   component={MapScreen}
                       />
             <Tab.Screen name="Album" component={AlbumStackComponent} />
             <Tab.Screen name="Site" component={SiteStackComponent} />
