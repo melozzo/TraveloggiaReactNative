@@ -7,6 +7,8 @@ import * as siteActions from './../redux-store/actions/site-actions';
 import { ListItem, Header } from 'react-native-elements'
 import Moment from 'moment';
 import { AntDesign } from '@expo/vector-icons'; 
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 const MapList = ( {navigation})=>{
       
@@ -60,6 +62,14 @@ const MapList = ( {navigation})=>{
             dispatch(siteActions.fetchSites(map.MapID))
             navigation.navigate('Map',{screen:"Map", params:{mapId:map.MapID}});
       }
+    
+      async function storeData (mapId) {
+            try {
+              await AsyncStorage.setItem('lastMapId', mapId)
+            } catch (e) {
+              // saving error
+            }
+          }
 
 }
 
